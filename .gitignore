@@ -1,0 +1,4 @@
+vendor/
+tmp/
+cmd/lxd2etcd/lxd2etcd
+build/docker/*.deb

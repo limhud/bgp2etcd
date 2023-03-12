@@ -1,0 +1,16 @@
+---
+debug: false
+bgp:
+  local_as: 65001
+  local_address: 127.0.0.1
+  peer_as: 65002
+  peer_address: 127.0.0.1
+  peer_port: 1179
+  router_id: 127.0.0.1
+etcd:
+  endpoints: ["127.0.0.1:2379"]
+  dial_timeout: 5s
+  username: bgp2etcd
+  password: secret
+  prefix: /bgp2etcd
+...

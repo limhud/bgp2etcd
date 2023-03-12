@@ -1,0 +1,17 @@
+[Unit]
+Description=Daemon populating etcd with bgp infos
+Requires=network.target remote-fs.target systemd-journald-dev-log.socket
+After=network.target remote-fs.target systemd-journald-dev-log.socket
+ConditionPathExists=/etc/bgp2etcd.yml
+
+[Service]
+Type=simple
+PIDFile=/run/bgp2etcd.pid
+User=bgp2etcd
+Group=bgp2etcd
+ExecStart=/usr/bin/bgp2etcd -c /etc/bgp2etcd.yml
+Restart=on-failure
+TimeoutStopSec=15s
+
+[Install]
+WantedBy=multi-user.target
