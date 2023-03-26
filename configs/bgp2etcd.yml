@@ -5,12 +5,13 @@ bgp:
   local_address: 127.0.0.1
   peer_as: 65002
   peer_address: 127.0.0.1
-  peer_port: 1179
+  peer_port: 179
   router_id: 127.0.0.1
 etcd:
   endpoints: ["127.0.0.1:2379"]
   dial_timeout: 5s
   username: bgp2etcd
   password: secret
-  prefix: /bgp2etcd
+  prefix: /bgp2etcd/my_hostname/next_hops
+  lock_prefix: /bgp2etcd/my_hostname/locks
 ...

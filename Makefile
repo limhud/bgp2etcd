@@ -24,7 +24,7 @@ GOVET_ARGS =
 
 BIN_PATH := $(BUILD_DIR)/bin
 BIN_LIST = $(patsubst cmd/%,%,$(wildcard cmd/*))
-PKG_LIST = "internal/bgp2etcd" "internal/config" "internal/bgp" "internal/etcd" "internal/service" "internal/errorcode"
+PKG_LIST = "internal/bgp2etcd" "internal/config" "internal/bgp" "internal/etcd" "internal/service" "internal/message" "internal/errorcode"
 TESTING_PKG_LIST = $(wildcard internal/testing/*)
 
 mesg_start = echo "$(shell tty -s && tput setaf 4)$(1):$(shell tty -s && tput sgr0) $(2)"

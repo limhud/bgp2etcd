@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"os/signal"
@@ -47,8 +46,7 @@ func main() {
 		err          error
 		flagSet      *flag.FlagSet
 		configString string
-		service      *bgp2etcd.Service
-		ctx          context.Context
+		service      bgp2etcd.Service
 		sigChan      chan os.Signal
 	)
 
@@ -67,6 +65,11 @@ func main() {
 		fmt.Printf("Error: %s\n", err)
 		flagSet.Help()
 		os.Exit(1)
+	}
+
+	if cmd.Help {
+		flagSet.Help()
+		os.Exit(0)
 	}
 
 	if !cmd.NoColor {
@@ -131,9 +134,12 @@ func main() {
 
 	// Start service and wait
 	loggo.GetLogger("").Debugf("starting service...")
-	err = service.Start()
-	if err != nil {
-		loggo.GetLogger("").Errorf(stacktrace.Propagate(err, "service error").Error())
+	if err := service.Start(); err != nil {
+		loggo.GetLogger("").Errorf(stacktrace.Propagate(err, "fail to start service").Error())
+		os.Exit(1)
+	}
+	if err := <-service.Done(); err != nil {
+		loggo.GetLogger("").Errorf(stacktrace.Propagate(err, "service failure").Error())
 		os.Exit(1)
 	}
 

@@ -6,6 +6,7 @@ import (
 	"github.com/juju/loggo"
 	"github.com/limhud/bgp2etcd/internal/bgp"
 	"github.com/limhud/bgp2etcd/internal/etcd"
+	"github.com/limhud/bgp2etcd/internal/messages"
 	"github.com/limhud/bgp2etcd/internal/service"
 	"github.com/palantir/stacktrace"
 )
@@ -20,12 +21,12 @@ type srv struct {
 	service.Service
 	bgpService  bgp.Service
 	etcdService etcd.Service
-	updateChan  chan *UpdateMessage
+	updateChan  chan *messages.UpdateMessage
 }
 
 // NewService returns a new service instance.
 func NewService() (Service, error) {
-	updateChan := make(chan *UpdateMessage, 1000)
+	updateChan := make(chan *messages.UpdateMessage, 1000)
 	bgpService, err := bgp.NewService(updateChan)
 	if err != nil {
 		return nil, stacktrace.Propagate(err, "fail to create bgp service")
@@ -46,7 +47,7 @@ func NewService() (Service, error) {
 }
 
 // ToggleDebug toggles log levele between DEBUG and INFO.
-func (service *Service) ToggleDebug() {
+func (s *srv) ToggleDebug() {
 	if loggo.GetLogger("").LogLevel() == loggo.INFO {
 		loggo.GetLogger("").Infof("setting log level to Debug")
 		loggo.GetLogger("").SetLogLevel(loggo.DEBUG)
@@ -68,6 +69,7 @@ func (s *srv) Run(shutdownSignal chan time.Duration) error {
 		return stacktrace.Propagate(err, "fail to start bgp service")
 	}
 	<-shutdownSignal
+	loggo.GetLogger("").Debugf("shutdown signal received")
 	return nil
 }
 

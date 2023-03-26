@@ -1,0 +1,67 @@
+.TH BGP2ETCD 1
+
+.SH NAME
+bgp2etcd \- bgp2etcd daemon.
+
+
+.SH SYNOPSIS
+.BR bgp2etcd
+.BR [\-d]
+.BR [\-t]
+.BR [\-\-no\-color]
+.BI [\-c " <file>"]
+.br
+.BR bgp2etcd
+.BR \-v
+
+
+.SH DESCRIPTION
+.B bgp2etcd
+is a daemon that establish a BGP session with a router and reports routes into etcd.
+
+Prefixes are aggregated by next hop and stored under the configured prefix, the key beeing the next hop and the value beeing a JSON array containing the prefixes. For example:
+
+    # etcdctl --user=root get --prefix /bgp2etcd/my_hostname/next_hops
+    /bgp2etcd/my_hostname/next_hops/10.255.0.2
+    ["10.255.32.4/32","10.255.32.1/32","10.255.32.2/32"]
+
+
+.SH OPTIONS
+.TP
+.BR \-h ", " \-\-help
+Show the help.
+.TP
+.BR \-v ", " \-\-version
+Show the version infos.
+.TP
+.BR \-d ", " \-\-debug
+Activate debug logging on stderr. (Override config parameter)
+.TP
+.BR \-t ", " \-\-trace
+Activate trace logging on stderr. (Override config parameter)
+.TP
+.BR \-\-no\-color
+Disable log coloring.
+.TP
+.BR \-c ", " \-\-config =\fIfile\fR
+Path to the config file (Default: /etc/bgp2etcd.yml)
+
+
+.SH SIGNALS
+
+.TP
+.BR SIGUSR2
+.br
+toggle between INFO and DEBUG log levels.
+.LP
+
+
+.SH FILES
+.TP
+.IR /etc/bgp2etcd.yml
+configuration file.
+
+
+.SH SEE ALSO
+.TP
+\fBbgp2etcd.yml\fR(5)

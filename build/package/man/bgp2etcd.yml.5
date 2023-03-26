@@ -1,0 +1,115 @@
+.TH BGP2ETCD.YML 5
+
+.SH NAME
+bgp2etcd.yml \- bgp2etcd configuration file.
+
+
+.SH SYNOPSIS
+.B /etc/bgp2etcd.yml
+
+
+.SH DESCRIPTION
+The configuration file follows YAML syntax. The different configuration options are:
+
+.TP
+.BR debug
+.br
+Debug flag (true/false)
+.LP
+
+.TP
+.BR bgp
+.br
+This section contains the configuration used to establish the BGP session:
+
+.RS
+.TP
+.BR local_as
+.br
+The local ASN the daemon should use. (ex: 65001)
+.TP
+.BR local_address
+.br
+The local address the daemon should use to contact its peer. (ex: 127.0.0.1)
+.TP
+.BR peer_as
+.br
+The remote ASN. (ex: 65002)
+.TP
+.BR peer_address
+.br
+The remote address. (ex: 127.0.0.1)
+.TP
+.BR peer_port
+.br
+The remote port. (ex: 179)
+.TP
+.BR router_id
+.br
+The router id used by the daemon. (ex: 127.0.0.1)
+.RE
+
+.TP
+.BR etcd
+.br
+This section contains the configuration used to connect to etcd:
+
+.RS
+.TP
+.BR endpoints
+.br
+The list of etcd endpoints. (ex: ["127.0.0.1:2379"])
+.TP
+.BR dial_timeout
+.br
+How much time to wait before giving up connect to etcd. (ex: 5s)
+.TP
+.BR username
+.br
+The credential username to use. (ex: bgp2etcd)
+.TP
+.BR password
+.br
+The credential password to use. (ex: secret)
+.TP
+.BR prefix
+.br
+under which prefix data should be stored (ex: /bgp2etcd/my_hostname/next_hops)
+.TP
+.BR lock_prefix
+.br
+under which prefix locks should be stored (ex: /bgp2etcd/my_hostname/locks)
+.RE
+
+
+.SH FILES
+.TP
+.IR /etc/bgp2etcd.yml
+
+
+.SH EXAMPLE
+
+.nf
+---
+debug: false
+bgp:
+  local_as: 65001
+  local_address: 127.0.0.1
+  peer_as: 65002
+  peer_address: 127.0.0.1
+  peer_port: 179
+  router_id: 127.0.0.1
+etcd:
+  endpoints: ["127.0.0.1:2379"]
+  dial_timeout: 5s
+  username: bgp2etcd
+  password: secret
+  prefix: /bgp2etcd/my_hostname/next_hops
+  lock_prefix: /bgp2etcd/my_hostname/locks
+...
+.fi
+
+
+.SH SEE ALSO
+.TP
+\fBbgp2etcd\fP(1)

@@ -40,19 +40,19 @@ func (bgp *BgpConfig) validate() error {
 	if bgp.LocalAS == 0 {
 		return stacktrace.NewError("<local_as> field is required and should not be 0")
 	}
-	if bgp.LocalAddress == nil {
+	if !bgp.LocalAddress.IsValid() {
 		return stacktrace.NewError("<local_address> field is required")
 	}
 	if bgp.PeerAS == 0 {
 		return stacktrace.NewError("<peer_as> field is required and should not be 0")
 	}
-	if bgp.PeerAddress == nil {
+	if !bgp.PeerAddress.IsValid() {
 		return stacktrace.NewError("<peer_address> field is required")
 	}
 	if bgp.PeerPort < 1 {
 		return stacktrace.NewError("<peer_port> field is required and should be >= 1")
 	}
-	if bgp.RouterID == nil {
+	if !bgp.RouterID.IsValid() {
 		return stacktrace.NewError("<router_id> field is required")
 	}
 	return nil
@@ -105,6 +105,7 @@ type EtcdConfig struct {
 	Username    string        `yaml:"username"`
 	Password    string        `yaml:"password"`
 	Prefix      string        `yaml:"prefix"`
+	LockPrefix  string        `yaml:"lock_prefix"`
 }
 
 func (etcd *EtcdConfig) validate() error {
@@ -116,6 +117,9 @@ func (etcd *EtcdConfig) validate() error {
 	}
 	if etcd.Prefix == "" {
 		return stacktrace.NewError("<prefix> field is required")
+	}
+	if etcd.LockPrefix == "" {
+		return stacktrace.NewError("<lock_prefix> field is required")
 	}
 	return nil
 }
@@ -140,6 +144,9 @@ func (etcd *EtcdConfig) Equal(comparedWith *EtcdConfig) error {
 	if etcd.Prefix != comparedWith.Prefix {
 		return stacktrace.NewError("Prefix value <%s> is different: <%s>", etcd.Prefix, comparedWith.Prefix)
 	}
+	if etcd.LockPrefix != comparedWith.LockPrefix {
+		return stacktrace.NewError("LockPrefix value <%s> is different: <%s>", etcd.LockPrefix, comparedWith.LockPrefix)
+	}
 	return nil
 }
 
@@ -151,6 +158,7 @@ func (etcd *EtcdConfig) Copy() *EtcdConfig {
 		Username:    etcd.Username,
 		Password:    etcd.Password,
 		Prefix:      etcd.Prefix,
+		LockPrefix:  etcd.LockPrefix,
 	}
 }
 
